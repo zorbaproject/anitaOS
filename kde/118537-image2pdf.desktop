@@ -1,0 +1,33 @@
+[Desktop Entry]
+Type=Service
+Actions=image2pdf;images2singlepdf
+Icon=application-pdf
+Encoding=UTF-8
+TryExec=convert
+Version=0.9
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=image/*
+
+[Desktop Action image2pdf]
+Exec=count=0; for f in %F; do convert "$f" "${f%.*}.pdf"; count=`expr $count + 1`; done; kdialog --title "image2pdf" --passivepopup "$count image(s) to pdfs converted!";
+Icon=application-pdf
+#Exec=convert %F %f.pdf
+Name=Convert image(s) to separate pdf
+Name[de]=Konvertiere Bild(er) zu mehreren pdfs
+Name[es]=Convertir archivo(s) de imagen en archivo(s) pdf (separados)
+Name[fr]=Convertir l'(les) image(s) au format pdf
+Name[it]=Converti immagini in pdf separati
+Name[ru]=Конвертировать в отдельные pdf
+Name[zh_CN]=转换图像至多次PDF文件
+
+[Desktop Action images2singlepdf]
+Exec=a="'%F'"; namewithoutext="${a%.*}"; namewithextpdf="$namewithoutext.pdf"; count=0; for f in %F; do fdir=$(dirname "$f"); count=`expr $count + 1`; done; cd "$fdir"; newname=$(kdialog --getsavefilename "$namewithextpdf" "*.pdf |PDF files"); if [ $? -eq 0 ]; then convert %F "$newname"; kdialog --title "image2pdf" --passivepopup "$count image(s) into single pdf '$newname' converted!"; else echo "Aborted"; fi;
+Icon=application-pdf
+#Exec=convert %F %f.pdf
+Name=Convert image(s) into single pdf
+Name[de]=Konvertiere Bild(er) in einzelnes pdf
+Name[es]=Convertir archivo(s) de imagen en un archivo pdf
+Name[fr]=Convertir l'(les) image(s) dans un fichier pdf unique
+Name[it]=Converti immagini in un singolo pdf
+Name[ru]=Конвертировать в единый pdf
+Name[zh_CN]=转换图像至PDF文件
