@@ -25,6 +25,8 @@ if [ ! $? -eq 0 ]; then
         exit 0
 fi
 
+sudo apt-get update
+
 for opzioneserver in $serverslist
 do
    echo "Hai scelto: $opzioneserver"
@@ -38,11 +40,11 @@ do
    fi
    
    if [ $opzioneserver == "scanner" ] ; then
-   sudo apt-get install cups hplip
+   sudo apt-get install sane-utils
    fi
    
    if [ $opzioneserver == "owncloud" ] ; then
-   sudo apt-get install cups hplip
+   sudo apt-get install owncloud
    fi
    
    if [ $opzioneserver == "lool" ] ; then
@@ -50,11 +52,21 @@ do
    fi
    
    if [ $opzioneserver == "LAMP" ] ; then
-   sudo apt-get install cups hplip
+   sudo apt-get -y install apache2 mysql-server php5-mysql php5 libapache2-mod-php5 php5-mcrypt
+   sudo mysql_install_db
+   sudo mysql_secure_installation
+   sudo systemctl restart apache2
+   sudo apt-get install phpmyadmin php-mbstring php-gettext
+   sudo phpenmod mcrypt
+   sudo phpenmod mbstring
+   sudo systemctl restart apache2
+   echo '<?php phpinfo(); ?>' | sudo tee /var/www/html/info.php
    fi
    
    if [ $opzioneserver == "apache" ] ; then
-   sudo apt-get install cups hplip
+   sudo apt-get -y install apache2 php5 libapache2-mod-php5 php5-mcrypt
+   sudo systemctl restart apache2
+   echo '<?php phpinfo(); ?>' | sudo tee /var/www/html/info.php
    fi
    
 done
