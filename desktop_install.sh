@@ -11,6 +11,8 @@ echo "Hai scelto DESKTOP"
 # TODO: controlliamo se l'attuale sistema sia Kubuntu o Debian, e se kubuntu desktop sia installato. Se è Debian, installiamo i pacchetti ed i repo necessari per avere comunque il minimo indispensabile.
 sudo apt-get install kubuntu-desktop
 
+#riconoscere i filesystem
+sudo apt-get install exfat-fuse
 
 #menù di dolphin per creare PDF
 sudo apt-get install img2pdf imagemagick ghostscript pdftk skanlite kamoso
