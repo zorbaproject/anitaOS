@@ -31,34 +31,6 @@ if ($_COOKIE[$cookiename] != ""){
                 
                 if ($myDB->tableExists($dbname,$papyrus_forms)) {
                     
-                    /*if ($_POST['frmname'] != "") {
-                        $frmname = $_POST['frmname'];
-                        $allelements = array();
-                        $i = 0;
-                        foreach ($_POST as $key => $value) {
-                            if (substr($key, -5) == "check"){
-                                $elemPrefix = substr($key, 0, -5);
-                                if ($_POST[$elemPrefix.'tablefield'] != "" && $_POST[$elemPrefix.'table'] != ""){
-                                    $elemname = strval($i)."_".$_POST[$elemPrefix.'tablefield']."@".$_POST[$elemPrefix.'table'];
-                                    $allelements[$elemname] = array("table" => $_POST[$elemPrefix.'table'], "tablefield" => $_POST[$elemPrefix.'tablefield'], "left" => $_POST[$elemPrefix.'left'], "top" => $_POST[$elemPrefix.'top']);
-                                    //$allelements[$elemname] = array("table" => $_POST[$elemPrefix.'table'], "tablefield" => $_POST[$elemPrefix.'tablefield'], "left" => $_POST[$elemPrefix.'left'], "top" => $_POST[$elemPrefix.'top'], "key" => $_POST[$elemPrefix.'key']);
-                                    $i = $i +1;
-                                }
-                            }
-                        }
-                        $allelements["keys"] = array("tbkey" => $_POST['tbkey']);
-                        
-                        //pulizia vecchi record
-                        $where = 'WHERE frmname = ?';
-                        $params = [$frmname];
-                        $res = $myDB->deleteFrom($dbname,$papyrus_forms,$where,$params);
-                        //inserimento nuovo record
-                        $frmcontent = json_encode($allelements);
-                        $params = array("frmname" => $frmname, "content" => $frmcontent);
-                        $res = $myDB->insert($dbname,$papyrus_forms, $params);
-                        
-                    }*/
-                    
                     $where = 'WHERE frmname = ?';
                     $params = [$frmname];
                     $res = $myDB->selectFrom($dbname,$papyrus_forms,$where,$params);
@@ -110,6 +82,77 @@ if ($_COOKIE[$cookiename] != ""){
                                 }
                             }
                         }
+                        $searchresults["tbkeyvalue"] = $tbkeyvalue;
+                    } elseif ($mycommand == "replace" && $tbkeyvalue != "") {
+                        foreach ($_POST as $key => $value) {
+                        if (strpos($key, "@") > 0 ) { //&& $value != "") {
+                            $atpos = strpos($key, "@")+1;
+                            $tmptable = substr($key, $atpos); //dopo @
+                            $undrscrpos = strpos($key, "_")+1;
+                            $tmpfield = substr($key, $undrscrpos, $atpos-$undrscrpos-1); // tra _ e @
+                            //leggo vecchio record
+                            $where = 'WHERE `'.$tbkey.'` = ?';
+                            $params = [$tbkeyvalue];
+                            $res = $myDB->selectFrom($dbname,$tmptable,$where,$params);
+                            $allelements = $res[0];
+                            //pulizia vecchio record
+                            $res = $myDB->deleteFrom($dbname,$tmptable,$where,$params);
+                            //inserimento nuovo record
+                            $allelements[$tmpfield] = $value;
+                            $res = $myDB->insert($dbname,$tmptable, $allelements);
+                        }
+                        }
+                    } elseif ($mycommand == "delete" && $tbkeyvalue != "") {
+                        foreach ($_POST as $key => $value) {
+                        if (strpos($key, "@") > 0 ) {
+                            $atpos = strpos($key, "@")+1;
+                            $tmptable = substr($key, $atpos); //dopo @
+                            $where = 'WHERE `'.$tbkey.'` = ?';
+                            $params = [$tbkeyvalue];
+                            //pulizia vecchio record
+                            if ($value != "") $res = $myDB->deleteFrom($dbname,$tmptable,$where,$params);
+                        }
+                        }
+                    } elseif ($mycommand == "insert" ) {
+                        //generiamo un valore univoco per la chiave
+                        $tbkeyvalue = "";
+                        foreach ($_POST as $key => $value) {
+                        if (strpos($key, "@") > 0 ) {
+                            $atpos = strpos($key, "@")+1;
+                            $tmptable = substr($key, $atpos); //dopo @
+                            $undrscrpos = strpos($key, "_")+1;
+                            $tmpfield = substr($key, $undrscrpos, $atpos-$undrscrpos-1); // tra _ e @
+                            $allelements = array();
+                            if ($tbkeyvalue == "") {
+                                //se non esiste lo creo
+                                $res = $myDB->getStructure($dbname,$tmptable);
+                                foreach ($res as $alval) {
+                                    if ($alval[0] == $tbkey) {
+                                        $tbkeyvalue = time();
+                                        if ($alval[1] == 'datetime') $tbkeyvalue = date('Y-m-d H:i:s');
+                                        if ($alval[1] == 'date') $tbkeyvalue = date('Y-m-d');
+                                        $allelements[$alval[0]] = $tbkeyvalue;
+                                    } else {
+                                        $allelements[$alval[0]] = null;
+                                    }
+                                }
+                                $res = $myDB->insert($dbname,$tmptable, $allelements);
+                                print_r($res);
+                            }
+                            //leggo vecchio record
+                            $where = 'WHERE `'.$tbkey.'` = ?';
+                            $params = [$tbkeyvalue];
+                            $res = $myDB->selectFrom($dbname,$tmptable,$where,$params);
+                            if (count($res)>0) {
+                                $allelements = $res[0];
+                                //pulizia vecchio record
+                                $res = $myDB->deleteFrom($dbname,$tmptable,$where,$params);
+                                //inserimento nuovo record
+                                if ($tmpfield != $tbkey || $value != "") $allelements[$tmpfield] = $value;  //la chiave deve sempre avere un valore
+                                $res = $myDB->insert($dbname,$tmptable, $allelements);
+                            }
+                        }
+                        }
                     }
                     
                     
@@ -131,7 +174,6 @@ if ($_COOKIE[$cookiename] != ""){
                                 $box = $box.'<b>'.$value["tablefield"].'</b><input type="hidden" name="tbkeyvalue" value="'.$tbkeyvalue.'" />';
                                 print $box;
                             } else {
-                                //print drawBox($key,$key,"checked", $value["table"], $value["tablefield"], $value["top"], $value["left"]);
                                 $box = "";
                                 $top = $value["top"];
                                 $left = $value["left"];
@@ -144,6 +186,7 @@ if ($_COOKIE[$cookiename] != ""){
                             }
                         }
                         //if ($tbkey == "") print 'Indica un campo chiave in tutte le tabelle:<input type="text" name="tbkey" value="'.$tbkey.'" />  '; 
+                        print '<input type="hidden" name="tbkeyvalue" value="'.$searchresults["tbkeyvalue"].'" />';
                     }
                     
                     
@@ -164,39 +207,6 @@ if ($_COOKIE[$cookiename] != ""){
     }
 }
 
-function drawBox($elemPrefix, $titlestr = "", $checked = "", $table = "", $tablefield = "", $top = "", $left = "") {
-    if ($top == "") $top = "200";
-    if ($left == "") $left = "0";
-    if ($titlestr == "") $titlestr = $elemPrefix;
-    
-    $myDB = $GLOBALS['myDB'];
-    $dbname = $GLOBALS['dbname'];
-    $papyrus_forms = $GLOBALS['papyrus_forms'];
-    $alltables = $myDB->listTables($dbname);
-    array_unshift($alltables, "");
-    $index = array_search($papyrus_forms,$alltables);
-    if($index !== FALSE)   unset($alltables[$index]);
-    
-    $allfields = array();
-    if ($table != ""){
-        $res = $myDB->getStructure($dbname,$table);
-        foreach ($res as $alval) {
-            $allfields[] = $alval[0];
-        }
-    }
-    $onchange = "onchange=\"getfields(this,'".$dbname."')\"";
-    
-    $result = '<div id="'.$elemPrefix.'" style="top:'.$top.';left:'.$left.';width:120px;height:120px;position:absolute;background-color:#f1f1f1;border: 1px solid #d3d3d3;">'; 
-    $result = $result.'<div id="'.$elemPrefix.'header" style="cursor: move;background-color: #2196F3;color: #fff;">'.$titlestr.'</div>'; 
-    $result = $result.' Attivo: <input type="checkbox" name="'.$elemPrefix.'check" value="attivo" '.$checked.'> '; 
-    $result = $result.'<br /> Tabella: <select name = "'.$elemPrefix.'table" '.$onchange.' >'.writeoptions($alltables, $table).'</select> '; 
-    $result = $result.'<br /> Campo: <select name = "'.$elemPrefix.'tablefield" >'.writeoptions($allfields, $tablefield).'</select> '; 
-    $result = $result.'<br /> X: <input type="text" name="'.$elemPrefix.'left" value="'.$left.'" size="3" /> '; 
-    $result = $result.'Y: <input type="text" name="'.$elemPrefix.'top" value="'.$top.'" size="3" /><br />'; 
-    $result = $result.'</div>';
-    $result = $result.'<script>dragElement(document.getElementById(("'.$elemPrefix.'")));</script>';
-    return $result;
-}
 
 function writeoptions($values, $selected = ""){
     $text = "";
