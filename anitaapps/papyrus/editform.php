@@ -22,6 +22,7 @@ if ($_COOKIE[$cookiename] != ""){
             }
             
             $frmname = $_GET['form'];
+            $tbkey = "";
             if ($frmname != "") {
                 
                 $jsscript = file_get_contents("draggable.js");
@@ -39,10 +40,12 @@ if ($_COOKIE[$cookiename] != ""){
                                 if ($_POST[$elemPrefix.'tablefield'] != "" && $_POST[$elemPrefix.'table'] != ""){
                                     $elemname = strval($i)."_".$_POST[$elemPrefix.'tablefield']."@".$_POST[$elemPrefix.'table'];
                                     $allelements[$elemname] = array("table" => $_POST[$elemPrefix.'table'], "tablefield" => $_POST[$elemPrefix.'tablefield'], "left" => $_POST[$elemPrefix.'left'], "top" => $_POST[$elemPrefix.'top']);
+                                    //$allelements[$elemname] = array("table" => $_POST[$elemPrefix.'table'], "tablefield" => $_POST[$elemPrefix.'tablefield'], "left" => $_POST[$elemPrefix.'left'], "top" => $_POST[$elemPrefix.'top'], "key" => $_POST[$elemPrefix.'key']);
                                     $i = $i +1;
                                 }
                             }
                         }
+                        $allelements["keys"] = array("tbkey" => $_POST['tbkey']);
                         
                         //pulizia vecchi record
                         $where = 'WHERE frmname = ?';
@@ -65,8 +68,13 @@ if ($_COOKIE[$cookiename] != ""){
                     if (count($res)>0) {
                         $allelements = json_decode($res[0]["content"], true);
                         foreach ($allelements as $key => $value) {
-                            print drawBox($key,$key,"checked", $value["table"], $value["tablefield"], $value["top"], $value["left"]);
+                            if ($key == "keys") {
+                                $tbkey = $value["tbkey"];
+                            } else {
+                                print drawBox($key,$key,"checked", $value["table"], $value["tablefield"], $value["top"], $value["left"]);
+                            }
                         }
+                       print 'Campo chiave in tutte le tabelle:<input type="text" name="tbkey" value="'.$tbkey.'" />  '; 
                     }
                     
                     

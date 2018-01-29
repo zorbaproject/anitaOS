@@ -50,6 +50,10 @@ fi
 
 fi
 
+# abilitare pannello di anteprima
+#~/.kde/share/apps/dolphin/view_properties/global/.directory
+#~/.kde/share/apps/dolphin/view_properties/remote/.directory
+
 # TODO: abilitare la barra dei menù in Dolphin
 
 # TODO: sostituiamo il pulsante del menù K con "Start", stile Windows XP

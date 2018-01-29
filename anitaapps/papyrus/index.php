@@ -25,6 +25,9 @@ if ($_COOKIE[$cookiename] != ""){
         print '<a href="create.php">Crea nuovo database</a>';
         print "</br>";
         
+        print "Utenti:"."</br>";
+        print '<a href="createusr.php">Crea nuovo utente</a>';
+        
     }
     
 }

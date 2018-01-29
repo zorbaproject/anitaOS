@@ -23,7 +23,7 @@ else {
             print_r($res);
         } else {
             $vettore = array($user,$pass);
-            setcookie($cookiename, json_encode($vettore), time() + 12000);
+            setcookie($cookiename, json_encode($vettore), time() + 120000);
             print '<a href="index.php">Index</a><META http-equiv="REFRESH" content="0; url=index.php">';
         }
         
