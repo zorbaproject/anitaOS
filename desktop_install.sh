@@ -23,16 +23,37 @@ if [ ! -f '/usr/share/kservices5/ServiceMenus/image2pdf.desktop' ]; then
 sudo mv $scriptfolder/kde/118537-image2pdf.desktop /usr/share/kservices5/ServiceMenus/image2pdf.desktop
 fi
 
+thisplugin="chromecast"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo mv $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
+thisplugin="combine-pdf"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo mv $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
+thisplugin="pdf2image"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo mv $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
+thisplugin="video2mp3"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo mv $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
 #abilitare le anteprime in dolphin
 sudo apt-get install kffmpegthumbnailer kde-thumbnailer-openoffice
 kbuildsycoca5
 
 #abilitare la barra del filtro in dolphin
-dolphinrc=$HOME"/.kde/share/config/dolphinrc"
+#dolphinrc=$HOME"/.kde/share/config/dolphinrc"
+dolphinrc="./dolphinrc"
 filterbar="[General]\nFilterBar=true"
 if [ ! -f $dolphinrc ]; then
 echo -e $filterbar >> $dolphinrc
-fi
+else
 
 if grep -q "FilterBar=false" "$dolphinrc"; then
 sed -i 's/FilterBar=false/FilterBar=true/' "$dolphinrc"
@@ -50,11 +71,21 @@ fi
 
 fi
 
+#showing menubar
+if grep -q "MenuBar=Disabled" "$dolphinrc"; then
+sed -i 's/MenuBar=Disabled//' "$dolphinrc"
+fi
+
+fi
 # abilitare pannello di anteprima
 #~/.kde/share/apps/dolphin/view_properties/global/.directory
 #~/.kde/share/apps/dolphin/view_properties/remote/.directory
+if grep -q "[PreviewSettings]" "$dolphinrc"; then
+echo "PreviewSettings OK"
+else
+echo -e "[PreviewSettings]\nPlugins=directorythumbnail,htmlthumbnail,gsthumbnail,textthumbnail,ffmpegthumbs,imagethumbnail,jpegthumbnail,svgthumbnail" >> $dolphinrc
+fi
 
-# TODO: abilitare la barra dei menù in Dolphin
 
 # TODO: sostituiamo il pulsante del menù K con "Start", stile Windows XP
 

@@ -1,0 +1,19 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/pdf;
+Icon=application-pdf
+Actions=combine
+X-KDE-Priority=TopLevel
+X-KDE-RequiredNumberOfUrls=2,3,4,5,6,7,8,9,10
+X-KDE-StartupNotify=false
+X-KDE-Submenu=Actions
+X-KDE-Submenu[de]=Aktionen
+
+[Desktop Action combine]
+Name=Combine *.pdf documents
+Name[de]=Kombiniere *.pdf Dokumente
+Icon=application-pdf
+TryExec=gs
+Exec=gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=combined.pdf %U
+

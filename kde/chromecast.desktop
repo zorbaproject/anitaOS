@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=audio/aac;audio/mp3;audio/wav;audio/webm;video/mp4;video/webm
+Actions=send;
+X-KDE-Priority=TopLevel
+X-KDE-StartupNotify=false
+Icon=phone
+
+[Desktop Action send]
+Name=Send to Chromecast
+Name[de]=An Chromecast senden
+Name[hr]=Pošalji Chromecastu
+Icon=phone
+TryExec=castnow
+Exec=konsole -e castnow "%U"
