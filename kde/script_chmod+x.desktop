@@ -1,0 +1,25 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/x-shellscript;application/x-ruby;text/x-python;application/x-executable
+Icon=application-x-shellscript
+X-KDE-Priority=TopLevel
+X-KDE-StartupNotify=false
+X-KDE-Submenu=Script
+X-KDE-Submenu[it]=Script
+
+
+Actions=me;cp;
+
+[Desktop Action me]
+Name=Make executable
+Name[it]=Rendi eseguibile
+Icon=system-run
+Exec=chmod +x "%f"
+
+[Desktop Action cp]
+Name=Copy to /usr/bin
+Name[it]=Copia in /usr/bin
+Icon=password-copy
+Exec=kdesu -d --noignorebutton -c 'sudo cp "%f" /usr/bin/'
+

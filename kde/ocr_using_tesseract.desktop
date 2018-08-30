@@ -1,0 +1,21 @@
+# Servicemenu ocr program
+# see readme.txt for copyright and licence
+
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=image/*;application/pdf;
+Icon=okular
+TryExec=tesseract
+Actions=OcrFile;
+Encoding=UTF-8
+
+[Desktop Action OcrFile]
+Name=OCR images
+Name[lt]=Nuskaityti tekstą
+Name[de]=Texterkennung
+Icon=okular
+Exec=`kde4-config --localprefix`/share/kde4/services/ServiceMenus/ocr_using_tesseract-script/ocr_using_tesseract.sh en %U
+Exec[lt]=`kde4-config --localprefix`/share/kde4/services/ServiceMenus/ocr_using_tesseract-script/ocr_using_tesseract.sh lt %U
+Exec[de]=`kde4-config --localprefix`/share/kde4/services/ServiceMenus/ocr_using_tesseract-script/ocr_using_tesseract.sh de %U
+

@@ -20,28 +20,61 @@ sudo apt-get install img2pdf imagemagick ghostscript pdftk skanlite kamoso
 if [ ! -f '/usr/share/kservices5/ServiceMenus/image2pdf.desktop' ]; then
 #wget https://dl.opendesktop.org/api/files/download/id/1460731752/118537-image2pdf.desktop
 #sudo mv 118537-image2pdf.desktop /usr/share/kservices5/ServiceMenus/image2pdf.desktop
-sudo mv $scriptfolder/kde/118537-image2pdf.desktop /usr/share/kservices5/ServiceMenus/image2pdf.desktop
+sudo cp $scriptfolder/kde/118537-image2pdf.desktop /usr/share/kservices5/ServiceMenus/image2pdf.desktop
 fi
 
 thisplugin="chromecast"
 if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
-sudo mv $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
 fi
 
 thisplugin="combine-pdf"
 if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
-sudo mv $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
 fi
 
 thisplugin="pdf2image"
 if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
-sudo mv $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
 fi
 
 thisplugin="video2mp3"
 if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
+thisplugin="10-rootactionsfolders"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
+thisplugin="11-rootactionsfiles"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+sudo cp $scriptfolder/kde/rootactions-servicemenu.pl /usr/bin/rootactions-servicemenu.pl
+
+thisplugin="156125-mkPDF"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
+thisplugin="mount-iso"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
+thisplugin="ocr_using_tesseract"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
 sudo mv $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
 fi
+sudo cp -r $scriptfolder/kde/ocr_using_tesseract-script /usr/share/kservices5/ServiceMenus/ocr_using_tesseract-script
+
+thisplugin="script_chmod+x"
+if [ ! -f '/usr/share/kservices5/ServiceMenus/'$thisplugin'.desktop' ]; then
+sudo cp $scriptfolder/kde/$thisplugin.desktop /usr/share/kservices5/ServiceMenus/$thisplugin.desktop
+fi
+
 
 #abilitare le anteprime in dolphin
 sudo apt-get install kffmpegthumbnailer kde-thumbnailer-openoffice

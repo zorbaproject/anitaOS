@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=image/*
+Icon=acroread
+Actions=makePDF
+
+
+
+[Desktop Action makePDF]
+Name=OCR and Embed in PDF
+Icon=acroread
+Exec=tesseract %f %f hocr; hocr2pdf -i %f -o %f.pdf < %f.html; rm %f.html
+
+
