@@ -18,10 +18,15 @@ if [ "$testroot" != "root" ]; then
     exit 1
 fi
 
-SKELUSER="$1"
+#SKELUSER="$1"
 if [ "$SKELUSER" = "" ]; then
     echo "Usage is: respin-skelcopy username"
     echo "Where username is a valid user on the system"
+    exit 1
+fi
+
+if [ "$SKELUSER" = "respin" ]; then
+    echo "User respin not accepted for skel"
     exit 1
 fi
 
