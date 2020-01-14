@@ -249,16 +249,20 @@ log_msg "$WORKDIR is on a $DIRTYPE filesystem"
 
     # check whether system is gnome or kde based to load the correct ubiquity frontend
 
-    #TODO: For some reason ubiquity KDE frontend crashes. We need GTK.
     #if [ "`ps axf | grep startkde | grep -v grep`" != "" -o "`ps axf | grep kwin | grep -v grep`" != "" ]; then
     #    log_msg "Installing the Ubiquity KDE frontend"
-    #    apt-get -y -q install ubiquity-frontend-kde &> /dev/null
-    #    apt-get -y -q remove ubiquity-frontend-gtk &> /dev/null
+        apt-get -y -q install ubiquity-frontend-kde &> /dev/null
+        apt-get -y -q remove ubiquity-frontend-gtk &> /dev/null
     #else
-        log_msg "Installing the Ubiquity GTK frontend"
-        apt-get -y -q install ubiquity-frontend-gtk &> /dev/null
+    #    log_msg "Installing the Ubiquity GTK frontend"
+    #    apt-get -y -q install ubiquity-frontend-gtk &> /dev/null
     #    apt-get -y -q remove ubiquity-frontend-kde &> /dev/null
     #fi
+    
+    #TODO: For some reason ubiquity KDE frontend crashes when using qtcurves
+    #https://userbase.kde.org/KDE_Connect/Tutorials/Useful_commands#Change_look_and_feel
+    #lookandfeeltool -a "org.kde.breeze.desktop"
+    sed -i 's/import os/import os\nos.system("/usr/bin/lookandfeeltool -a \"org.kde.breeze.desktop\")"/g' /usr/bin/ubiquity
 
     # Check if they are using lightdm and if it is setup properly for the live default session
     # [ "`grep lightdm /etc/X11/default-display-manager`" != "" ] && [ ! -f /etc/lightdm/lightdm.conf ] && [ ! -f /usr/share/xsessions/ubuntu.desktop ] && echo "Lightdm not setup properly. You must set your default desktop with lightdm prior to respinning" &&  echo "Lightdm not setup properly. You must set your default desktop with lightdm prior to respinning" >> $WORKDIR/respin.log && exit 1
